@@ -1,8 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const keycloak = require('../config/keycloak-config.js').getKeycloak();
 
-router.get("/list", keycloak.protect(['user','admin']), async (req, res) => {
+router.get("/list", async (req, res) => {
     const stripe = req.app.get('stripe');
     try {
         const invoices = await stripe.invoices.list()
@@ -14,7 +13,7 @@ router.get("/list", keycloak.protect(['user','admin']), async (req, res) => {
 
 })
 
-router.post("/retrieve", keycloak.protect(['user','admin']), async (req, res) => {
+router.post("/retrieve",  async (req, res) => {
     const stripe = req.app.get('stripe');
     try {
         const { invoiceId } = req.body;
@@ -26,7 +25,7 @@ router.post("/retrieve", keycloak.protect(['user','admin']), async (req, res) =>
     }
 })
 
-router.post("/pay",  keycloak.protect('admin'), async (req, res) => {
+router.post("/pay", async (req, res) => {
     const stripe = req.app.get('stripe');
     try {
         const { invoiceId } = req.body;

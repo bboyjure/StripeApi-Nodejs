@@ -1,7 +1,7 @@
 FROM node:14
 
-# Enviroment variables
-ENV NODE_ENV=${NODE_ENV}
+# # Enviroment variables
+# ENV NODE_ENV=${NODE_ENV}
 
 # Create app directory
 WORKDIR /usr/src/app
@@ -17,5 +17,5 @@ RUN npm install
 # Bundle app source
 COPY . .
 
-EXPOSE ${PORT}
+EXPOSE 3000
 CMD [ "node", "server.js" ]

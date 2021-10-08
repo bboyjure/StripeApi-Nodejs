@@ -1,10 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const limit = 10;
-const keycloak = require('../config/keycloak-config.js').getKeycloak();
 
 
-router.get("/products", keycloak.protect(['user','admin']), async (req, res) => {
+router.get("/products", async (req, res) => {
     const stripe = req.app.get('stripe');
 
     const products = await stripe.products.list({
@@ -14,7 +13,7 @@ router.get("/products", keycloak.protect(['user','admin']), async (req, res) => 
 })
 
 
-router.get("/prices",keycloak.protect(['user','admin']), async (req, res) => {
+router.get("/prices", async (req, res) => {
     const stripe = req.app.get('stripe');
 
     const prices = await stripe.prices.list({
@@ -25,7 +24,7 @@ router.get("/prices",keycloak.protect(['user','admin']), async (req, res) => {
 })
 
 
-router.post("/product", keycloak.protect(['user','admin']), async (req, res) => {
+router.post("/product",  async (req, res) => {
     const stripe = req.app.get('stripe');
 
     const product = await stripe.products.retrieve(req.body.productId);
@@ -33,7 +32,7 @@ router.post("/product", keycloak.protect(['user','admin']), async (req, res) => 
 })
 
 
-router.post("/price", keycloak.protect(['user','admin']),  async (req, res) => {
+router.post("/price",  async (req, res) => {
     const stripe = req.app.get('stripe');
     const price = await stripe.prices.retrieve(req.body.priceId);
     res.send(price);

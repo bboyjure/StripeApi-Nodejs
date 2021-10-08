@@ -8,7 +8,11 @@ var keycloakConfig = {
     bearerOnly: true,
     serverUrl: process.env.KC_URL,
     realm: process.env.KC_REALM,
-    realmPublicKey: process.env.KC_PUBLIC_KEY
+    sslRequired: 'external',
+    credentials: {
+        secret: process.env.KC_SECRET,
+        realmPublicKey: process.env.KC_PUBLIC_KEY
+    }
 };
 
 function initKeycloak() {

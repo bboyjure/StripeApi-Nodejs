@@ -1,14 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const keycloakService = require('../services/keycloak.service')
-const keycloak = require('../config/keycloak-config.js').getKeycloak();
 
-router.post("/create",  keycloak.protect('admin'), async (req, res) => {
+router.post("/create", async (req, res) => {
     const stripe = req.app.get('stripe');
     try {
         let time = new Date().getTime();
         time += 1209600000;
-        const { priceId, customerId, keycloakId } = req.body;
+        const { priceId, customerId, keycloakId } = await req.body;
         const subscription = await stripe.subscriptions.create({
             customer: customerId.toString(),
             items: [
@@ -19,16 +18,16 @@ router.post("/create",  keycloak.protect('admin'), async (req, res) => {
             trial_end: Math.round(time / 1000),
         });
         keycloakService.setKeycloakAttributes(keycloakId.toString(), customerId.toString(), subscription.id.toString())
-        res.send("Succeed")
+        res.status(200)
     }
     catch (e) {
         console.error(e)
-        res.send(e)
+        res.send(e).status(400)
     }
 })
 
 
-router.post("/retrieve",  keycloak.protect(['user','admin']), async (req, res) => {
+router.post("/retrieve", async (req, res) => {
     const stripe = req.app.get('stripe');
     try {
         const { subscriptionId } = req.body;
@@ -37,12 +36,12 @@ router.post("/retrieve",  keycloak.protect(['user','admin']), async (req, res) =
     }
     catch (e) {
         console.error(e)
-        res.send(e)
+        res.send(e).status(400)
     }
 })
 
 
-router.delete("/cancel", keycloak.protect('admin'),  async (req, res) => {
+router.delete("/cancel",  async (req, res) => {
     const stripe = req.app.get('stripe');
     try {
         const { subscriptionId } = req.body;
@@ -51,7 +50,7 @@ router.delete("/cancel", keycloak.protect('admin'),  async (req, res) => {
     }
     catch (e) {
         console.error(e)
-        res.send(e)
+        res.send(e).status(400)
     }
 })
 

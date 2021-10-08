@@ -8,7 +8,6 @@ const express = require('express');
 const bodyParser = require('body-parser')
 const stripe = require('stripe')(process.env.STRIPE_SK_KEY)
 const PORT = process.env.PORT
-const HOST = process.env.HOST;
 const cors = require('cors');
 const checkoutSessionController = require('./app/controllers/checkout-session.controller')
 const customerPortalController = require('./app/controllers/customer-portal.controller')
@@ -20,13 +19,15 @@ const productController = require('./app/controllers/products.controller')
 
 //init App
 const app = express();
+// CORS
+var corsOptions = {
+    origin: '*'
+};
+
+app.use(cors(corsOptions));
 //Keycloak
 const keycloak = require('./app/config/keycloak-config.js').initKeycloak();
 app.use(keycloak.middleware());
-
-app.use(cors({
-    origin: '*'
-}));
 
 
 //Stripe
@@ -46,6 +47,6 @@ app.use('/webhook', webhookController);
 app.use('/', productController);
 
 // Bootstraper
-app.listen((PORT, HOST), () => {
-    console.log(`App listening at ${process.env.PROTOCOL}://${process.env.HOST_IP}:${PORT}`)
+app.listen(PORT, () => {
+    console.log(`App listening at port :${PORT}`)
 })

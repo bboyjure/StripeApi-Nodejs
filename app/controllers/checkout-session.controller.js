@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const keycloak = require('../config/keycloak-config.js').getKeycloak();
+// const keycloak = require('../config/keycloak-config.js').getKeycloak();
 
-router.post('/', keycloak.protect('admin'),  async (req, res) => {
+router.post('/', async (req, res) => {
     const stripe = req.app.get('stripe');
     const { priceId } = req.body;
     console.log(priceId)
