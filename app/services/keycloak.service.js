@@ -10,10 +10,11 @@ const setKeycloakAttributes = (kcSubject, customerId, stripeSub) => {
 
     const reqPayload = {
         grant_type: "password",
-        client_id: "angular",
-        password: "fleetopti",
-        username: "test"
+        client_id: process.env.KC_ADMIN_ID,
+        password:  process.env.KC_ADMIN_PASSWORD,
+        username:  process.env.KC_ADMIN_USERNAME
     }
+    
     request.post({uri: tokenUrl, headers: tokenHeaders, form: reqPayload }, function (error, response, body) {
         if (!error && response.statusCode == 200) {
             const token = JSON.parse(body).access_token;
@@ -26,7 +27,7 @@ const setKeycloakAttributes = (kcSubject, customerId, stripeSub) => {
             const jsonObject = {
                 "attributes": {
                     "stripeSub": stripeSub,
-                    "stripeid": customerId
+                    "stripeId": customerId
                 }
             }
 
