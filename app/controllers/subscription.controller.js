@@ -6,7 +6,8 @@ router.post("/create", async (req, res) => {
     const stripe = req.app.get('stripe');
     try {
         let time = new Date().getTime();
-        time += 1209600000;
+        // time += 1209600000;
+        time += 345600000;
         const { priceId, customerId, keycloakId } = await req.body;
         const subscription = await stripe.subscriptions.create({
             customer: customerId.toString(),

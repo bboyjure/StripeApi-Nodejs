@@ -34,7 +34,8 @@ router.post("/product",  async (req, res) => {
 
 router.post("/price",  async (req, res) => {
     const stripe = req.app.get('stripe');
-    const price = await stripe.prices.retrieve(req.body.priceId);
+    const {priceId} = req.body
+    const price = await stripe.prices.retrieve(priceId);
     res.send(price);
 })
 

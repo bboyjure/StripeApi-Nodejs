@@ -1,6 +1,8 @@
 const request = require('request');
-const usersUrl = "https://perpro.sledenje.com/auth/admin/realms/omniopti/users"
-const tokenUrl = "https://perpro.sledenje.com/auth/realms/omniopti/protocol/openid-connect/token"
+const usersUrl = process.env.KC_TOKEN_USERS
+const tokenUrl = process.env.KC_TOKEN_URL
+const { v4: uuidv4 } = require('uuid');
+
 
 const setKeycloakAttributes = (kcSubject, customerId, stripeSub) => {
 
@@ -27,7 +29,8 @@ const setKeycloakAttributes = (kcSubject, customerId, stripeSub) => {
             const jsonObject = {
                 "attributes": {
                     "stripeSub": stripeSub,
-                    "stripeId": customerId
+                    "stripeId": customerId,
+                    "stripeGroupId": Date.now() + uuidv4()
                 }
             }
 
