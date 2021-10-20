@@ -26,7 +26,7 @@ router.post('/', async (req, res) => {
             cancel_url: 'https://example.com/cancel',
         });
 
-        res.send({
+        res.status(201).send({
             sessionId: session.id,
         });
     } catch (e) {

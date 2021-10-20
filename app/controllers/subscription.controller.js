@@ -18,8 +18,8 @@ router.post("/create", async (req, res) => {
             ],
             trial_end: Math.round(time / 1000),
         });
-        keycloakService.setKeycloakAttributes(keycloakId.toString(), customerId.toString(), subscription.id.toString())
-        res.status(200)
+        const response = keycloakService.setKeycloakAttributes(keycloakId.toString(), customerId.toString(), subscription.id.toString())
+        res.status(201).send(response);
     }
     catch (e) {
         console.error(e)

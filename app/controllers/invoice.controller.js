@@ -1,14 +1,15 @@
 const express = require('express');
 const router = express.Router();
 
-router.get("/list", async (req, res) => {
+router.post("/list", async (req, res) => {
     const stripe = req.app.get('stripe');
     try {
-        const invoices = await stripe.invoices.list()
+        const { customerId } = req.body;
+        const invoices = await stripe.invoices.list({ customer: customerId });
         res.send(invoices);
     }
     catch {
-        throw new Error("No Invoices")
+        throw new Error("No Invoices Found")
     }
 
 })

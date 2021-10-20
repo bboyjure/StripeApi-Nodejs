@@ -16,37 +16,50 @@ const setKeycloakAttributes = (kcSubject, customerId, stripeSub) => {
         password:  process.env.KC_ADMIN_PASSWORD,
         username:  process.env.KC_ADMIN_USERNAME
     }
+    const jsonObject = new Attributes(stripeSub, customerId, Date.now() + uuidv4())
     
     request.post({uri: tokenUrl, headers: tokenHeaders, form: reqPayload }, function (error, response, body) {
         if (!error && response.statusCode == 200) {
             const token = JSON.parse(body).access_token;
-            console.log(token)
+            // console.log(token)
             const userHeaders = {
                 "Content-Type": "application/json",
                 "Authorization": `Bearer ${token}`
             }
         
-            const jsonObject = {
-                "attributes": {
-                    "stripeSub": stripeSub,
-                    "stripeId": customerId,
-                    "stripeGroupId": Date.now() + uuidv4()
-                }
-            }
+           
 
-            request.put({uri: `${usersUrl}/${kcSubject}`, headers: userHeaders, body: JSON.stringify(jsonObject)},function (error, response, body) {
+            request.put({uri: `${usersUrl}/${kcSubject}`, headers: userHeaders, body: JSON.stringify(jsonObject.getJsonObject())},function (error, response, body) {
                 if (!error){
-                    console.log(`Keycloak attributes are set for keycloak:customer  ${kcSubject} : ${customerId}`)
+                    console.log(`Keycloak attributes are set for keycloak:customer  ${kcSubject} : ${customerId}`);
                 }
                 else{
-                    throw new Error("Keycloak Attributes have NOT been set!")
+                    throw new Error("Keycloak Attributes have NOT been set!");
                 }
             })
         }
         else{
-            throw new Error("Cannot get keycloak ID")
+            throw new Error("Cannot get keycloak ID");
         }
     })
+
+    return jsonObject.getJsonObject()
+}
+
+class Attributes {
+    constructor(stripeSub, customerId, stripeGroupId){
+        this.stripeSub = stripeSub;
+        this.customerId = customerId;
+        this.stripeGroupId = stripeGroupId;
+    }
+
+    getJsonObject(){
+        return {"attributes": {
+            "stripeSub": this.stripeSub,
+            "stripeId": this.customerId,
+            "stripeGroupId": this.stripeGroupId
+        }}
+    }
 }
 
 module.exports = { setKeycloakAttributes };

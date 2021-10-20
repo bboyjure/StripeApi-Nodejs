@@ -12,7 +12,7 @@ router.post("/create", async (req, res) => {
             name: username.toString(),
           });
     
-        res.send(customer)
+        res.status(201).send(customer)
     }
     catch (e){
         res.send(e).status(400)
