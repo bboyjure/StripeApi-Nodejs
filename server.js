@@ -4,19 +4,24 @@ if (process.env.NODE_ENV !== 'production') {
 }
 // Constants
 const express = require('express');
-const bodyParser = require('body-parser')
 const stripe = require('stripe')(process.env.STRIPE_SK_KEY)
 const PORT = process.env.PORT
 const cors = require('cors');
 const app = express();
 app.use(cors({ origin: '*'}));
 
+
 //Keycloak
 const keycloak = require('./app/config/keycloak-config.js').initKeycloak();
 app.use(keycloak.middleware());
+
+// Push notification handlers
+const webPush = require('./app/services/webpush.service.js');
+const payLoad = webPush.initPayload( 'FleetOpti', 'New message', 'Alo buraz')
+webPush.sendPushNotification("jure.beton@gmail.com", payLoad);
+
 //Stripe
 app.set("stripe", stripe)
-
 // create application/json parser
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))

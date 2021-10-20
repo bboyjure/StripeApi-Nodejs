@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const webPush = require('../services/webpush.service.js');
 
 router.post("/", express.raw({ type: 'application/json' }),
     (request, response) => {
@@ -29,6 +30,7 @@ router.post("/", express.raw({ type: 'application/json' }),
         }
         let subscription;
         let status;
+        let payLoad;
         // Handle the event
         console.log(event)
         switch (event.type) {
@@ -36,6 +38,8 @@ router.post("/", express.raw({ type: 'application/json' }),
                 subscription = event.data.object;
                 status = subscription.status;
                 console.log(`Subscription status is ${status}.`, subscription);
+                payLoad = webPush.initPayload('FleetOpti', 'Trial will end in 3 days!', status)
+                webPush.sendPushNotification("jure.beton@gmail.com", payLoad);
                 // Then define and call a method to handle the subscription trial ending.
                 // handleSubscriptionTrialEnding(subscription);
                 break;
@@ -53,9 +57,29 @@ router.post("/", express.raw({ type: 'application/json' }),
                 // Then define and call a method to handle the subscription created.
                 // handleSubscriptionCreated(subscription);
                 break;
+            case 'invoice.payment_succeeded':
+                subscription = event.data.object;
+                status = subscription.status;
+                payLoad = webPush.initPayload('FleetOpti', 'Payment Succeeded!', status)
+                webPush.sendPushNotification("jure.beton@gmail.com", payLoad);
+                // console.log(`Subscription status is ${status}.`);
+                // Then define and call a method to handle the subscription created.
+                // handleSubscriptionCreated(subscription);
+                break;
+            case 'charge.failed':
+                subscription = event.data.object;
+                status = subscription.status;
+                payLoad = webPush.initPayload('FleetOpti', 'Payment Failed!', status)
+                webPush.sendPushNotification("jure.beton@gmail.com", payLoad);
+                // console.log(`Subscription status is ${status}.`);
+                // Then define and call a method to handle the subscription update.
+                // handleSubscriptionUpdated(subscription);
+                break;
             case 'customer.subscription.updated':
                 subscription = event.data.object;
                 status = subscription.status;
+                payLoad = webPush.initPayload('FleetOpti', 'New message!', status)
+                webPush.sendPushNotification("jure.beton@gmail.com", payLoad);
                 // console.log(`Subscription status is ${status}.`);
                 // Then define and call a method to handle the subscription update.
                 // handleSubscriptionUpdated(subscription);

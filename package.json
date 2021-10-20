@@ -21,7 +21,8 @@
     "keycloak-connect": "^15.0.2",
     "request": "^2.88.2",
     "stripe": "^8.178.0",
-    "uuid": "^8.3.2"
+    "uuid": "^8.3.2",
+    "web-push": "^3.4.5"
   },
   "devDependencies": {
     "nodemon": "^2.0.13"
