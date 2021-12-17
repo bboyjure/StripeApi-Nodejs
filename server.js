@@ -17,7 +17,7 @@ app.use(keycloak.middleware());
 
 // Push notification handlers
 const webPush = require('./app/services/webpush.service.js');
-// const payLoad = webPush.initPayload( 'FleetOpti', 'New message', 'Alo buraz')
+// const payLoad = webPush.initPayload( 'FleetOpti', 'New message', 'Alo ALO ALO')
 // webPush.sendPushNotification("jure.beton@gmail.com", payLoad);
 
 //Stripe
